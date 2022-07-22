@@ -88,7 +88,7 @@ function costoLienzo() {
 function cotizarImpresion() {
     let material = 0;
     do {
-        material = parseInt(prompt('Bienvenid@ al cotizador de impresiones\nEscoge en que material deseas tu impresión marcando el numero correspondiente, o presiona 0 para salir \n1- Vinilo Adesivo \n2- Pendón en Lona \n3- Lienzo \n0- Volver al menú principal'));
+        material = parseInt(prompt('Bienvenid@ al cotizador de impresiones\nEscoge en que material deseas tu impresión marcando el número correspondiente, o presiona 0 para salir \n1- Vinilo Adesivo \n2- Pendón en Lona \n3- Lienzo \n0- Volver al menú principal.'));
 
         switch (material) {
             case 1:
@@ -99,10 +99,12 @@ function cotizarImpresion() {
             case 2:
                 const valorFinal2 = costoPendon();
                 alert('El valor de tu Pendon es: $' + valorFinal2 + ' Cop');
+                listaImpresiones.push({ material: 'Lona', costo: valorFinal2 });
                 break;
             case 3:
                 const valorFinal3 = costoLienzo();
                 alert('El valor de tu Lienzo es: $' + valorFinal3 + ' Cop');
+                listaImpresiones.push({ material: 'Lienzo', costo: valorFinal3 });
                 break;
             default:
                 break;
@@ -111,11 +113,13 @@ function cotizarImpresion() {
 }
 
 function listarImpresionesCotizadas() {
+    let lista = '';
     listaImpresiones.forEach(element => {
         for (const property in element) {
-            alert(`${property}: ${element[property]}`);
+            lista += `${property}: ${element[property]}\n`;
         }
     });
+    alert(lista);
 }
 
 // menú principal:
