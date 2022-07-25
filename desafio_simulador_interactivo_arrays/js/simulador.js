@@ -61,7 +61,7 @@ function costoVinilo() {
         precioCorte = alto * valorMetroCorte;
     }
     const precio = (ancho * alto * (metroCuadradoVinilo + valorMetroImpresion)) + precioCorte;
-    return precio;
+    return Math.round(precio) ;
 }
 
 function costoPendon() {
@@ -73,14 +73,14 @@ function costoPendon() {
         precioTubo = ancho * valorMetroTuboAluminio;
     }
     const precio = (ancho * alto * (metroCuadradoLona + valorMetroImpresion)) + precioTubo;
-    return precio;
+    return Math.round(precio);
 }
 
 function costoLienzo() {
     const ancho = validadAncho();
     const alto = validarAlto();
     const precio = ((ancho + 0.1) * (alto + 0.1) * metroCuadradoLienzo) + (ancho * alto * valorMetroImpresion * 2);
-    return precio;
+    return Math.round(precio);
 }
 
 
