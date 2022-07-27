@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Simulador interactivo con arrays</title>
+</head>
+<body>
+    <h1>Simulador interactivo</h1>
+    <h2>Cotiza tu impresión</h2>
+    <p>Es un cotizador de impresiones de gran formato en diferentes tipos de material dependiendo de su medida. <br>Como lo pueden ser vinilos adhesivos, pendones publicitarios y lienzos para cuadros decorativos.</p>
+
+    <div class="formulario">
+        <form>
+            <fieldset>
+                <legend>Cotiza tu Vinilo Adhesivo</legend>
+                <label for="ancho">
+                    Ancho: 
+                    <input type="number" id="ancho" name="ancho" placeholder="Ingrese el ancho" min="20" max="130" required>
+                </label>
+                <label for="alto">
+                    Alto: 
+                    <input type="number" id="alto" name="alto" placeholder="Ingrese el alto" min="20" max="400" required> 
+                </label>
+                <div>
+                    <button type="button" onclick="costoVinilo()">
+                        Cotizar
+                    </button>
+                    <label for="resultado">
+                        Total: 
+                        <span id="resultado"></span>
+                    </label>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <h3>Lista de impresiones cotizadas</h3>
+    <div id="cuerpo">
+
+    </div>
+
+
+
+    <script src="js/simulador.js"></script>
+</body>
+</html>
