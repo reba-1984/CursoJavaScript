@@ -1,0 +1,15 @@
+.item{
+    color: blue;
+}
+
+.red{
+    color: red;
+}
+
+#prod{
+    background-color: aqua;
+    padding: 20px;
+    margin-top: 20px;
+    list-style-type: none;
+    border-radius: 20px;
+}
