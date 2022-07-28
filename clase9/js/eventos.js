@@ -1,4 +1,4 @@
-console.log('Bienvenidos al simulador interactivo \nCotizador de impresiones en gran formato:');
+console.log('Eventos');
 
 //valor del metro cudrado de cada material:
 const metroCuadradoVinilo = 13600;
@@ -22,7 +22,6 @@ const listaImpresiones = [];
 
 //funciones:
 
-
 function costoVinilo() {
     // variable que me trae el elemento de id= ancho
     let ancho = document.getElementById('ancho').value;
@@ -36,22 +35,7 @@ function costoVinilo() {
     resultado.innerHTML = `El precio de tu vinilo es: $${precio} Cop`;
     resultado.className = 'total';
     listaImpresiones.push({ material: 'Vinilo', ancho: ancho, alto: alto, costo: precio});
-    listarImpresionesCotizadas();
 }
 
 let boton = document.getElementById('button');
 boton.addEventListener('click', costoVinilo);
-
-function listarImpresionesCotizadas() {
-    let cuerpo = document.getElementById('cuerpo');
-    cuerpo.innerHTML = '';
-    listaImpresiones.forEach(p=> {
-        // creamos elemento de tipo li
-        let li = document.createElement('li');
-        // le asignamos contenido al li
-        li.innerHTML = `${p.material} de ${p.ancho}cm de ancho por ${p.alto}cm de alto - Precio: <b>$${p.costo}</b> `;
-        //agregamos el elemento al padre
-        cuerpo.append(li);
-    });
-}
-
