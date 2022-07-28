@@ -38,4 +38,5 @@ function costoVinilo() {
 }
 
 let boton = document.getElementById('button');
-boton.addEventListener('click', costoVinilo);
+ancho.addEventListener('input', costoVinilo);
+alto.addEventListener('input', costoVinilo);
