@@ -96,4 +96,13 @@ button:hover{
     margin-right: auto;
 }
 
+@media screen and (max-width: 720px) {
+    .formulario{
+        width: 80vw;
+    }
+    .cuerpo{
+        min-width: 80vw;
+        max-width: max-content;
+    }
+}
 

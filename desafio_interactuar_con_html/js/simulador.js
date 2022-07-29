@@ -1,18 +1,19 @@
 console.log('Bienvenidos al simulador interactivo \nCotizador de impresiones en gran formato:');
 
 //valor del metro cudrado de cada material:
-const metroLinealVinilo = 13600;
-const metroLinealLona = 15000;
-const metroCuadradoLienzo = 75000;
+const valorMetroLinealVinilo = 13600;
+const valorMetroLinealLona = 15000;
+const valorMetroCuadradoLienzo = 75000;
 
 //valor del metro lineal de los tubos de aluminio que se usa para el pendon publisictario:
 const valorMetroTuboAluminio = 10000;
 
 //valor de la impresión por metro cuadrado en el plotter de impresión en gran formato HP-Latex-540:
-const valorMetroPloteo = 25000;
+const valorMetroCuadradoPloteo = 25000;
+const valorMetroPloteoLienzo = 50000;
 
 //valor del servicio de corte para el vinilo adhesivo:
-const valorMetroCorte = 7800;
+const valorMetroLinealCorte = 7800;
 
 //objeto producto cotizado
 const producto = {}
@@ -22,49 +23,58 @@ const listaImpresiones = [];
 
 //funciones:
 
-function validarMedidasVinilo() {
+function validarMedidas() {
+    // variable que me trae el material seleccionado
+    let material = document.getElementById('material').value;
     // variable que me trae el elemento de id= ancho
-    let ancho = document.getElementById('ancho').value;
+    let ancho = parseInt(document.getElementById('ancho').value);
     // variable que me trae el elemento de id= alto
-    let alto = document.getElementById('alto').value;
-    if(alto >= 20 && ancho >= 20){
-        if (alto <= 130 || ancho <= 130) {
-            costoVinilo(ancho, alto);
+    let alto = parseInt(document.getElementById('alto').value);
+    if (ancho >= 20 && alto >= 20) {
+        if (ancho <= 130 || alto <= 130) {
+            precioProducto(ancho, alto, material);
         } else {
-            alert('alguna de las dos medidas debe ser menor a 130cm');
+            alert('Alguna de las dos medidas debe ser menor o igual a 130cm');
         }
     }
-    else{
+    else {
         alert('Ambas medidas deben ser de mínimo 20cm');
     }
 }
 
-function costoVinilo(ancho, alto) {
+function precioProducto(ancho, alto, material) {
     // calculo el precio del ploteo
-    let precioPloteo = (ancho / 100) * (alto / 100) * (valorMetroPloteo);
-    if (precioPloteo > 10000) {
-        precioPloteo = 10000
-    } 
-    // calculo el precio del material
-    let precioMaterial = (ancho / 100) * (alto / 100) * (metroLinealVinilo);
-    /*
-    if (ancho <= 130 && alto <= 130) {
-        precioMaterial = 
-    } else {
-        
+    let precioPloteo = ( Math.round( ( (ancho / 100) * (alto / 100) * valorMetroCuadradoPloteo) / 1000 ) ) * 1000;
+    if (precioPloteo < 10000) {
+        precioPloteo = 10000;
     }
-    */
-    let precio = Math.round(precioMaterial + precioPloteo);
+    console.log(precioPloteo);
+    // calculo el precio del material
+    let precioMaterial = 0;
+    if (ancho > 130) {
+        precioMaterial = (ancho / 100) * (valorMetroLinealVinilo);
+    } else if (alto > 130) {
+        precioMaterial = (alto / 100) * (valorMetroLinealVinilo);
+    } else if (ancho < alto) {
+        precioMaterial = (ancho / 100) * (valorMetroLinealVinilo);
+    } else {
+        precioMaterial = (alto / 100) * (valorMetroLinealVinilo);
+    }
+    precioMaterial = ( Math.round(precioMaterial/1000) ) * 1000;
+
+    let precio = precioMaterial + precioPloteo;
     // variable que me trae el elemento id= resultado
     let resultado = document.getElementById('resultado');
     // le asigno el nuevo valor al elemento de id resultado
-    resultado.innerHTML = `El precio de tu vinilo es: $${precio} Cop`;
-    listaImpresiones.push({ material: 'Vinilo', ancho: ancho, alto: alto, costo: precio });
+    resultado.innerHTML = `El precio de tu ${material} es: $${precio} Cop`;
+    listaImpresiones.push({ material: material, ancho: ancho, alto: alto, costo: precio });
     listarImpresionesCotizadas();
 }
 
+
 let boton = document.getElementById('button');
-boton.addEventListener('click', validarMedidasVinilo);
+boton.addEventListener('click', validarMedidas);
+
 
 
 // lista de impresiones cotizadas
