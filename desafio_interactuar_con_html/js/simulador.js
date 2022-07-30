@@ -10,6 +10,7 @@ const valorMetroTuboAluminio = 10000;
 
 //valor de la impresión por metro cuadrado en el plotter de impresión en gran formato HP-Latex-540:
 const valorMetroCuadradoPloteo = 25000;
+const valorMinimoPloteo = 10000;
 const valorMetroPloteoLienzo = 50000;
 
 //valor del servicio de corte para el vinilo adhesivo:
@@ -30,25 +31,28 @@ function validarMedidas() {
     let ancho = parseInt(document.getElementById('ancho').value);
     // variable que me trae el elemento de id= alto
     let alto = parseInt(document.getElementById('alto').value);
-    if (ancho >= 20 && alto >= 20) {
-        if (ancho <= 130 || alto <= 130) {
+    // variable que guarda el tamaño minimo
+    let medidaMinima = 20;
+    // variable que guarda el ancho máximo permitido
+    let anchoMaximo = 130;
+    if (ancho >= medidaMinima && alto >= medidaMinima) {
+        if (ancho <= anchoMaximo || alto <= anchoMaximo) {
             precioProducto(ancho, alto, material);
         } else {
-            alert('Alguna de las dos medidas debe ser menor o igual a 130cm');
+            alert(`Alguna de las dos medidas debe ser menor o igual a ${anchoMaximo}`);
         }
     }
     else {
-        alert('Ambas medidas deben ser de mínimo 20cm');
+        alert(`Ambas medidas deben ser de mínimo ${medidaMinima}`);
     }
 }
 
 function precioProducto(ancho, alto, material) {
     // calculo el precio del ploteo
     let precioPloteo = ( Math.round( ( (ancho / 100) * (alto / 100) * valorMetroCuadradoPloteo) / 1000 ) ) * 1000;
-    if (precioPloteo < 10000) {
-        precioPloteo = 10000;
+    if (precioPloteo < valorMinimoPloteo) {
+        precioPloteo = valorMinimoPloteo;
     }
-    console.log(precioPloteo);
     // calculo el precio del material
     let precioMaterial = 0;
     if (ancho > 130) {
@@ -61,12 +65,16 @@ function precioProducto(ancho, alto, material) {
         precioMaterial = (alto / 100) * (valorMetroLinealVinilo);
     }
     precioMaterial = ( Math.round(precioMaterial/1000) ) * 1000;
-
+    // sumamos en precio del ploteo mas el precio del material
     let precio = precioMaterial + precioPloteo;
     // variable que me trae el elemento id= resultado
     let resultado = document.getElementById('resultado');
     // le asigno el nuevo valor al elemento de id resultado
     resultado.innerHTML = `El precio de tu ${material} es: $${precio} Cop`;
+    // variable que me trae el parrafo del mensaje del iva
+    let mensajeIva = document.getElementById('mensajeIva');
+    // le cambio el display al mensaje iva
+    mensajeIva.className ='visible';
     listaImpresiones.push({ material: material, ancho: ancho, alto: alto, costo: precio });
     listarImpresionesCotizadas();
 }
