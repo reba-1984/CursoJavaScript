@@ -17,10 +17,17 @@ const valorMetroPloteoLienzo = 50000;
 const valorMetroLinealCorte = 7800;
 
 //objeto producto cotizado
-const producto = {}
+let producto = {};
 
-//lista de impresiones cotizadas
-const listaImpresiones = [];
+// contador
+let contador=0;
+if (localStorage.getItem('contador') === null) {
+    console.log(' no existe');
+    localStorage.setItem('contador', contador);
+} else {
+    contador = localStorage.getItem('contador');
+    console.log(localStorage.getItem('contador'));
+}
 
 //funciones:
 
@@ -49,7 +56,7 @@ function validarMedidas() {
 
 function precioProducto(ancho, alto, material) {
     // calculo el precio del ploteo
-    let precioPloteo = ( Math.round( ( (ancho / 100) * (alto / 100) * valorMetroCuadradoPloteo) / 1000 ) ) * 1000;
+    let precioPloteo = (Math.round(((ancho / 100) * (alto / 100) * valorMetroCuadradoPloteo) / 1000)) * 1000;
     if (precioPloteo < valorMinimoPloteo) {
         precioPloteo = valorMinimoPloteo;
     }
@@ -64,7 +71,7 @@ function precioProducto(ancho, alto, material) {
     } else {
         precioMaterial = (alto / 100) * (valorMetroLinealVinilo);
     }
-    precioMaterial = ( Math.round(precioMaterial/1000) ) * 1000;
+    precioMaterial = (Math.round(precioMaterial / 1000)) * 1000;
     // sumamos en precio del ploteo mas el precio del material
     let precio = precioMaterial + precioPloteo;
     // variable que me trae el elemento id= resultado
@@ -74,28 +81,52 @@ function precioProducto(ancho, alto, material) {
     // variable que me trae el parrafo del mensaje del iva
     let mensajeIva = document.getElementById('mensajeIva');
     // le cambio el display al mensaje iva
-    mensajeIva.className ='visible';
-    listaImpresiones.push({ material: material, ancho: ancho, alto: alto, costo: precio });
+    mensajeIva.className = 'visible';
+    contador++;
+    producto = { id: contador, material: material, ancho: ancho, alto: alto, costo: precio };
+
+    //agrego el conrador
+    localStorage.setItem('contador', contador);
+    //convierto en json el objeto
+    const enJSON = JSON.stringify(producto);
+    //agrego el jason al localstorage
+    localStorage.setItem(producto.id, enJSON);
+       
     listarImpresionesCotizadas();
 }
 
+listarImpresionesCotizadas();
 
 let boton = document.getElementById('button');
 boton.addEventListener('click', validarMedidas);
 
 
-
 // lista de impresiones cotizadas
 function listarImpresionesCotizadas() {
+    let listaImpresiones = [];
     let cuerpo = document.getElementById('cuerpo');
     cuerpo.innerHTML = '';
+
+    //recorro el storage
+    for (let i = 1; i < localStorage.length; i++) {
+        let clave = localStorage.key(i);
+        //convierto json a onjeto
+        const traeObjeto = JSON.parse(localStorage.getItem(clave));
+        //agrego el objeto a la lista
+        listaImpresiones.push(traeObjeto);
+    }
+
+    //recorro la lista de impresiones cotizadas
     listaImpresiones.forEach(p => {
         // creamos elemento de tipo li
         let li = document.createElement('li');
-        // le asignamos contenido al li
-        li.innerHTML = `${p.material} de ${p.ancho}cm de ancho por ${p.alto}cm de alto - Precio: <b>$${p.costo}</b> `;
-        //agregamos el elemento al padre
-        cuerpo.append(li);
+
+        if (p.id) {
+            // le asignamos contenido al li
+            li.innerHTML = `${p.id}:  ${p.material} de ${p.ancho}cm de ancho por ${p.alto}cm de alto - Precio: <b>$${p.costo}</b> `;
+            //agregamos el elemento al padre
+            cuerpo.append(li);
+        }
     });
 }
 
