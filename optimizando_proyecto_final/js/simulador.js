@@ -13,6 +13,9 @@ const valorMetroCuadradoPloteo = 25000;
 const valorMinimoPloteo = 10000;
 const valorMetroPloteoLienzo = 50000;
 
+// variable que guarda el tamaño minimo
+const medidaMinima = 20;
+
 //valor del servicio de corte para el vinilo adhesivo:
 const valorMetroLinealCorte = 7800;
 
@@ -20,34 +23,79 @@ const valorMetroLinealCorte = 7800;
 let producto = {};
 
 // contador
-let contador=0;
+let contador = 0;
 if (localStorage.getItem('contador') === null) {
     console.log(' no existe');
     localStorage.setItem('contador', contador);
 } else {
     contador = localStorage.getItem('contador');
     console.log(localStorage.getItem('contador'));
+    listarImpresionesCotizadas();
 }
 
 //funciones:
 
-function validarMedidas() {
-    // variable que me trae el material seleccionado
-    let material = document.getElementById('material').value;
+//funsión que me retorna el ancho máximo dependiendo del material seleccionado
+function validarMaterial() {
     // variable que me trae el elemento de id= ancho
     let ancho = parseInt(document.getElementById('ancho').value);
     // variable que me trae el elemento de id= alto
     let alto = parseInt(document.getElementById('alto').value);
-    // variable que guarda el tamaño minimo
-    let medidaMinima = 20;
+    // variable que me trae el material seleccionado
+    let material = document.getElementById('material').value;
     // variable que guarda el ancho máximo permitido
-    let anchoMaximo = 130;
+    let anchoMaximo;
+    switch (material) {
+        case 'Vinilo':
+            anchoMaximo = 130;
+            validarMedidasGeneral(ancho, alto, material, anchoMaximo);
+            break;
+        case 'Lona':
+            anchoMaximo = 130;
+            validarMedidasGeneral(ancho, alto, material, anchoMaximo);
+            break;
+        case 'Pendón Vertical':
+            anchoMaximo = 130;
+            if (ancho <= alto) {
+                validarMedidasGeneral(ancho, alto, material, anchoMaximo);
+            } else {
+                alert('En el pendón vertical el ancho no debe ser mayor al alto');
+            }
+            validarPendonVertical(ancho, alto, material, anchoMaximo);
+            break;
+        case 'Pendón Horizontal':
+            anchoMaximo = 120;
+            if (alto <= ancho) {
+                validarMedidasGeneral(ancho, alto, material, anchoMaximo);
+            } else {
+                alert('En el pendón Horizontal el alto no debe ser mayor al ancho');
+            }
+            validarPendonVertical(ancho, alto, material, anchoMaximo);
+            break;
+        case 'Lienzo':
+            anchoMaximo = 125;
+            validarMedidasGeneral(ancho, alto, material, anchoMaximo);
+            break;
+        case 'Propalcote':
+            anchoMaximo = 130;
+            validarMedidasGeneral(ancho, alto, material, anchoMaximo);
+            break;
+        case 'Fotográfico':
+            anchoMaximo = 70;
+            validarMedidasGeneral(ancho, alto, material, anchoMaximo);
+            break;
+    }
+}
+
+function validarMedidasGeneral(an, al, mat, anchoMax) {
+    let ancho = an;
+    let alto = al;
+    let material = mat;
+    let anchoMaximo = anchoMax;
+    // aplico el operador lógico AND
     if (ancho >= medidaMinima && alto >= medidaMinima) {
-        if (ancho <= anchoMaximo || alto <= anchoMaximo) {
-            precioProducto(ancho, alto, material);
-        } else {
-            alert(`Alguna de las dos medidas debe ser menor o igual a ${anchoMaximo}`);
-        }
+        // aplico el operador Ternario y el operadpor lógico OR
+        ancho <= anchoMaximo || alto <= anchoMaximo ? precioProducto(ancho, alto, material) : alert(`Alguna de las dos medidas debe ser menor o igual a ${anchoMaximo}`);
     }
     else {
         alert(`Ambas medidas deben ser de mínimo ${medidaMinima}`);
@@ -82,24 +130,19 @@ function precioProducto(ancho, alto, material) {
     let mensajeIva = document.getElementById('mensajeIva');
     // le cambio el display al mensaje iva
     mensajeIva.className = 'visible';
+    // aplico el operador ++
     contador++;
+    // creo el objeto producto
     producto = { id: contador, material: material, ancho: ancho, alto: alto, costo: precio };
-
-    //agrego el conrador
+    //agrego el conTador
     localStorage.setItem('contador', contador);
     //convierto en json el objeto
     const enJSON = JSON.stringify(producto);
     //agrego el jason al localstorage
     localStorage.setItem(producto.id, enJSON);
-       
+
     listarImpresionesCotizadas();
 }
-
-listarImpresionesCotizadas();
-
-let boton = document.getElementById('button');
-boton.addEventListener('click', validarMedidas);
-
 
 // lista de impresiones cotizadas
 function listarImpresionesCotizadas() {
@@ -129,4 +172,10 @@ function listarImpresionesCotizadas() {
         }
     });
 }
+
+// Botón 
+let boton = document.getElementById('button');
+boton.addEventListener('click', validarMaterial);
+
+
 
