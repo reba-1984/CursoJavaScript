@@ -44,54 +44,51 @@ function validarMaterial() {
     // variable que me trae el material seleccionado
     let material = document.getElementById('material').value;
     // variable que guarda el ancho máximo permitido
-    let anchoMaximo;
+
+    let objeto = {ancho: ancho, alto: alto, material: material, anchoMaximo: 0 };
     switch (material) {
         case 'Vinilo':
-            anchoMaximo = 130;
-            validarMedidasGeneral(ancho, alto, material, anchoMaximo);
+            objeto.anchoMaximo = 130;
+            validarMedidasGeneral(objeto);
             break;
         case 'Lona':
-            anchoMaximo = 130;
-            validarMedidasGeneral(ancho, alto, material, anchoMaximo);
+            objeto.anchoMaximo = 130;
+            validarMedidasGeneral(objeto);
             break;
         case 'Pendón Vertical':
-            anchoMaximo = 130;
+            objeto.anchoMaximo = 130;
             if (ancho <= alto) {
-                validarMedidasGeneral(ancho, alto, material, anchoMaximo);
+                validarMedidasGeneral(objeto);
             } else {
                 alert('En el pendón vertical el ancho no debe ser mayor al alto');
             }
-            validarPendonVertical(ancho, alto, material, anchoMaximo);
             break;
         case 'Pendón Horizontal':
-            anchoMaximo = 120;
+            objeto.anchoMaximo = 120;
             if (alto <= ancho) {
-                validarMedidasGeneral(ancho, alto, material, anchoMaximo);
+                validarMedidasGeneral(objeto);
             } else {
                 alert('En el pendón Horizontal el alto no debe ser mayor al ancho');
             }
-            validarPendonVertical(ancho, alto, material, anchoMaximo);
             break;
         case 'Lienzo':
-            anchoMaximo = 125;
-            validarMedidasGeneral(ancho, alto, material, anchoMaximo);
+            objeto.anchoMaximo = 125;
+            validarMedidasGeneral(objeto);
             break;
         case 'Propalcote':
-            anchoMaximo = 130;
-            validarMedidasGeneral(ancho, alto, material, anchoMaximo);
+            objeto.anchoMaximo = 130;
+            validarMedidasGeneral(objeto);
             break;
         case 'Fotográfico':
-            anchoMaximo = 70;
-            validarMedidasGeneral(ancho, alto, material, anchoMaximo);
+            objeto.anchoMaximo = 70;
+            validarMedidasGeneral(objeto);
             break;
     }
 }
 
-function validarMedidasGeneral(an, al, mat, anchoMax) {
-    let ancho = an;
-    let alto = al;
-    let material = mat;
-    let anchoMaximo = anchoMax;
+function validarMedidasGeneral(objetoValidar) {
+    //aplico desestructuración
+    let{ancho, alto, material, anchoMaximo} = objetoValidar;
     // aplico el operador lógico AND
     if (ancho >= medidaMinima && alto >= medidaMinima) {
         // aplico el operador Ternario y el operadpor lógico OR
