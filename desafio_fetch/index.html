@@ -41,15 +41,28 @@
             <div class="boton">
                 <button type="button" id="button">Cotizar</button>    
             </div>
-            <span id="resultado"></span>
+            <div class="boton">
+                <button type="button" id="buttonReset">Limpiar</button>    
+            </div>
+            <span id="resultado" class="resultado"></span>
             <p id="mensajeIva" class="invisible">*Este valor no incluye IVA</p>
     </div>
 
     <h3>Lista de impresiones cotizadas</h3>
 
-    <div class="cuerpo" id="cuerpo">
-        No has hecho ninguna cotización
+    <div class="cuerpo">
+        <div id="cuerpo">
+            No has hecho ninguna cotización
+        </div>
+        <div class="boton">
+            <button type="button" id="buttonTotal" class="invisible">Total</button>
+        </div>
+        <span id="resultadoTotal" class="resultado"></span>
     </div>
+
+
+
+
 
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/simulador.js"></script>

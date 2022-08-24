@@ -79,7 +79,7 @@ button:hover{
     transform: scale(1.05);
 }
 
-#resultado{
+.resultado{
     text-align: center;
     font-size: 24px;
     font-weight: bold;

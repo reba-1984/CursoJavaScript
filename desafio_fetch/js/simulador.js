@@ -1,35 +1,49 @@
 console.log('Bienvenidos al simulador interactivo \nCotizador de impresiones en gran formato:');
 
 //valor del metro cudrado de cada material:
-const valorMetroLinealVinilo = 13600;
-const valorMetroLinealLona = 15000;
-const valorMetroCuadradoLienzo = 75000;
-
+let valorMetroLinealVinilo;
+let valorMetroLinealLona;
+let valorMetroCuadradoLienzo;
 //valor del metro lineal de los tubos de aluminio que se usa para el pendon publisictario:
-const valorMetroTuboAluminio = 10000;
-
+let valorMetroTuboAluminio;
 //valor de la impresión por metro cuadrado en el plotter de impresión en gran formato HP-Latex-540:
-const valorMetroCuadradoPloteo = 25000;
-const valorMinimoPloteo = 10000;
-const valorMetroPloteoLienzo = 50000;
-
+let valorMetroCuadradoPloteo;
+let valorMinimoPloteo;
+let valorMetroPloteoLienzo;
 // variable que guarda el tamaño minimo
-const medidaMinima = 20;
-
+let medidaMinima;
 //valor del servicio de corte para el vinilo adhesivo:
-const valorMetroLinealCorte = 7800;
+let valorMetroLinealCorte;
+
+// accediendo al json mediante ruta relativa
+fetch('../data/precios.json')
+    .then((res) => res.json())
+    .then((data) => {
+        valorMetroLinealVinilo = data.valorMetroLinealVinilo;
+        valorMetroLinealLona = data.valorMetroLinealLona;
+        valorMetroCuadradoLienzo = data.valorMetroCuadradoLienzo;
+        valorMetroTuboAluminio = data.valorMetroTuboAluminio;
+        valorMetroCuadradoPloteo = data.valorMetroCuadradoPloteo;
+        valorMinimoPloteo = data.valorMinimoPloteo;
+        valorMetroPloteoLienzo = data.valorMetroPloteoLienzo;
+        medidaMinima = data.medidaMinima;
+        valorMetroLinealCorte = data.valorMetroLinealCorte;
+    })
 
 //objeto producto cotizado
 let producto = {};
+let cuerpo = document.getElementById('cuerpo');
 
 // contador
 let contador = 0;
-if (localStorage.getItem('contador') === null) {
+if (localStorage.getItem(0) === null  || localStorage.getItem(0) == 0) {
     console.log(' no existe');
-    localStorage.setItem('contador', contador);
+    localStorage.setItem(0, contador);
+    cuerpo.innerHTML = 'No has hecho ninguna cotización';
+
 } else {
-    contador = localStorage.getItem('contador');
-    console.log(localStorage.getItem('contador'));
+    contador = localStorage.getItem(0);
+    console.log(localStorage.getItem(0));
     listarImpresionesCotizadas();
 }
 
@@ -45,7 +59,7 @@ function validarMaterial() {
     let material = document.getElementById('material').value;
     // variable que guarda el ancho máximo permitido
 
-    let objeto = {ancho: ancho, alto: alto, material: material, anchoMaximo: 0 };
+    let objeto = { ancho: ancho, alto: alto, material: material, anchoMaximo: 0 };
     switch (material) {
         case 'Vinilo':
             objeto.anchoMaximo = 130;
@@ -109,19 +123,19 @@ function validarMaterial() {
 
 function validarMedidasGeneral(objetoValidar) {
     //aplico desestructuración
-    let{ancho, alto, material, anchoMaximo} = objetoValidar;
+    let { ancho, alto, material, anchoMaximo } = objetoValidar;
     // aplico el operador lógico AND
     if (ancho >= medidaMinima && alto >= medidaMinima) {
         // aplico el operador Ternario y el operadpor lógico OR
-        ancho <= anchoMaximo || alto <= anchoMaximo ? precioProducto(ancho, alto, material, anchoMaximo) : 
-        //sweet alert
-        Swal.fire({
-            confirmButtonColor: '#000',
-            title: 'Advertencia!',
-            text: `Alguna de las dos medidas debe ser menor o igual a ${anchoMaximo}`,
-            icon: 'warning',
-            confirmButtonText: 'OK'
-        })
+        ancho <= anchoMaximo || alto <= anchoMaximo ? precioProducto(ancho, alto, material, anchoMaximo) :
+            //sweet alert
+            Swal.fire({
+                confirmButtonColor: '#000',
+                title: 'Advertencia!',
+                text: `Alguna de las dos medidas debe ser menor o igual a ${anchoMaximo}`,
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            })
     }
     else {
         //sweet alert
@@ -168,19 +182,19 @@ function precioProducto(ancho, alto, material, anchoMaximo) {
     // creo el objeto producto
     producto = { id: contador, material: material, ancho: ancho, alto: alto, costo: precio };
     //agrego el conTador
-    localStorage.setItem('contador', contador);
+    localStorage.setItem(0, contador);
     //convierto en json el objeto
     const enJSON = JSON.stringify(producto);
     //agrego el jason al localstorage
     localStorage.setItem(producto.id, enJSON);
-
+    // llamo a la función listar
     listarImpresionesCotizadas();
 }
 
 // lista de impresiones cotizadas
 function listarImpresionesCotizadas() {
     let listaImpresiones = [];
-    let cuerpo = document.getElementById('cuerpo');
+    cuerpo = document.getElementById('cuerpo');
     cuerpo.innerHTML = '';
 
     //recorro el storage
@@ -192,6 +206,18 @@ function listarImpresionesCotizadas() {
         listaImpresiones.push(traeObjeto);
     }
 
+    // ordeno la lista 
+    listaImpresiones.sort(function (a, b) {
+        if (a.id > b.id) {
+            return 1;
+        }
+        if (a.id < b.id) {
+            return -1;
+        }
+        // a = b
+        return 0;
+    });
+
     //recorro la lista de impresiones cotizadas
     listaImpresiones.forEach(p => {
         // creamos elemento de tipo li
@@ -202,13 +228,37 @@ function listarImpresionesCotizadas() {
             li.innerHTML = `${p.id}:  ${p.material} de ${p.ancho}cm de ancho por ${p.alto}cm de alto - Precio: <b>$${p.costo}</b> `;
             //agregamos el elemento al padre
             cuerpo.append(li);
+            console.log(p);
         }
     });
+}
+
+// funcion que borra el local storage y recarga la pagina
+function resetear() {
+    Swal.fire({
+        title: 'Estás seguro de borrar todo',
+        text: "Se eliminarán todos los datos almacenados",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#000',
+        confirmButtonText: 'Si, borrar todo!',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire(
+                localStorage.clear(),
+                window.location.reload()
+            )
+        }
+    })
 }
 
 // Botón 
 let boton = document.getElementById('button');
 boton.addEventListener('click', validarMaterial);
 
-
+// Botón reset
+let botonReset = document.getElementById('buttonReset');
+botonReset.addEventListener('click', resetear);
 
